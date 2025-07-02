@@ -7,8 +7,6 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-app.route("/")
-
-
+@app.route("/")
 def home():
     return "Page Analyzer Works!"
