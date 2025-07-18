@@ -1,7 +1,9 @@
 import os
 
+import requests
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
+from requests.exceptions import HTTPError
 
 from page_analyzer.db import UrlsRepo
 from page_analyzer.url_utilities import is_valid_url, normalize_url
@@ -52,9 +54,17 @@ def url_get(url_id):
 
 @app.post("/urls/<int:url_id>/checks")
 def checks_post(url_id):
+    url = repo.get_url(url_id)
+    try:
+        resp = requests.get(url['name'], timeout=1)
+        resp.raise_for_status()
+    except HTTPError:
+        flash('Произошла ошибка при проверке', 'danger')
+        return redirect(url_for('url_get', url_id=url_id))
+
     check = {
         'url_id': url_id,
-        'status_code': None,
+        'status_code': resp.status_code,
         'h1': None,
         'title': '',
         'description': ''

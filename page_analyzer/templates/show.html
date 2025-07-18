@@ -44,7 +44,7 @@
                 {% for check in checks %}
                 <tr>
                     <td>{{check.id}}</td>
-                    <td></td>
+                    <td>{{check.status_code or ''}}</td>
                     <td></td>
                     <td></td>
                     <td></td>

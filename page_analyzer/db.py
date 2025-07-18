@@ -12,7 +12,14 @@ class UrlsRepo:
             SELECT
                 urls.id,
                 urls.name,
-                MAX(url_checks.created_at) AS date_last_check
+                MAX(url_checks.created_at) AS date_last_check,
+                (
+                SELECT url_checks.status_code
+                FROM url_checks
+                WHERE url_checks.url_id = urls.id
+                ORDER BY url_checks.created_at DESC
+                LIMIT 1
+                ) AS status_code
             FROM urls
             LEFT JOIN url_checks ON urls.id = url_checks.url_id
             GROUP BY urls.id, urls.name
