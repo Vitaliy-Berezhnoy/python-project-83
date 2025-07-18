@@ -8,7 +8,17 @@ class UrlsRepo:
 
     def get_all_urls(self):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
-            cur.execute('SELECT * FROM urls ORDER BY urls.id DESC;')
+            query = """
+            SELECT
+                urls.id,
+                urls.name,
+                MAX(url_checks.created_at) AS date_last_check
+            FROM urls
+            LEFT JOIN url_checks ON urls.id = url_checks.url_id
+            GROUP BY urls.id, urls.name
+            ORDER BY urls.id DESC;
+            """
+            cur.execute(query)
             urls = cur.fetchall()
         return urls
 
@@ -33,3 +43,34 @@ class UrlsRepo:
             cur.execute('SELECT * FROM urls WHERE id = %s;', (url_id,))
             result = cur.fetchone()
         return result
+
+    def add_check(self, check):
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            query = """
+            INSERT INTO url_checks  (
+                url_id,
+                status_code,
+                h1,
+                title,
+                description
+            )
+            VALUES (
+                %(url_id)s,
+                %(status_code)s,
+                %(h1)s,
+                %(title)s,
+                %(description)s
+            )
+            RETURNING id;
+            """
+            cur.execute(query, check)
+            check_id = cur.fetchone()
+            self.conn.commit()
+        return check_id['id']
+
+    def get_url_checks(self, url_id):
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            query = 'SELECT * FROM url_checks WHERE url_id = %s;'
+            cur.execute(query, (url_id,))
+            url_checks = cur.fetchall()
+        return url_checks

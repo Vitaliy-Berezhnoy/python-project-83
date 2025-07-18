@@ -37,16 +37,31 @@ def urls_post():
     if existing_url:
         flash('Страница уже существует', 'info')
         url_id = existing_url
-        print('22222', url_id, '333333')
     else:
         url_id = repo.add_url(url)
         flash('Страница успешно добавлена', 'success')
-    return redirect(url_for('url_get', id=url_id))
+    return redirect(url_for('url_get', url_id=url_id))
 
 
-@app.route("/urls/<int:id>")
-def url_get(id):
-    url = repo.get_url(id)
-    return render_template('show.html', url=url)
+@app.route("/urls/<int:url_id>")
+def url_get(url_id):
+    url = repo.get_url(url_id)
+    url_checks = repo.get_url_checks(url_id)
+    return render_template('show.html', url=url, checks=url_checks)
+
+
+@app.post("/urls/<int:url_id>/checks")
+def checks_post(url_id):
+    check = {
+        'url_id': url_id,
+        'status_code': None,
+        'h1': None,
+        'title': '',
+        'description': ''
+    }
+    repo.add_check(check)
+    flash('Страница успешно проверена', 'success')
+    return redirect(url_for('url_get', url_id=url_id))
+
 
 

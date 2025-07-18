@@ -18,8 +18,8 @@
                 {% for url in urls %}
                 <tr>
                     <td>{{url.id}}</td>
-                    <td><a href="{{ url_for('url_get', id=url.id)}}">{{url.name}}</a></td>
-                    <td>{{''}}</td>
+                    <td><a href="{{ url_for('url_get', url_id=url.id)}}">{{url.name}}</a></td>
+                    <td>{{url.date_last_check or ''}}</td>
                     <td>{{''}}</td>
                 </tr>
                 {% endfor %}
