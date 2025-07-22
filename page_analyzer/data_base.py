@@ -27,7 +27,7 @@ class UrlsRepo:
             """
             cur.execute(query)
             urls = cur.fetchall()
-            self.conn.commit()
+#            self.conn.commit()
         return urls
 
     def add_url(self, url):
@@ -42,16 +42,16 @@ class UrlsRepo:
 
     def find_same_url(self, url):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
-            cur.execute('SELECT id FROM urls WHERE name = (%s)', (url,))
+            cur.execute('SELECT id FROM urls WHERE name = (%s);', (url,))
             url_id = cur.fetchone()
-            self.conn.commit()
-        return url_id
+#            self.conn.commit()
+        return url_id['id']
 
     def get_url(self, url_id):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute('SELECT * FROM urls WHERE id = %s;', (url_id,))
             result = cur.fetchone()
-            self.conn.commit()
+#            self.conn.commit()
         return result
 
     def add_check(self, check):
@@ -83,5 +83,5 @@ class UrlsRepo:
             query = 'SELECT * FROM url_checks WHERE url_id = %s;'
             cur.execute(query, (url_id,))
             url_checks = cur.fetchall()
-            self.conn.commit()
+#            self.conn.commit()
         return url_checks
