@@ -1,7 +1,10 @@
 [project]
 name = "hexlet-code"
 version = "0.1.0"
-description = "Add your description here"
+description = "Page Analyzer is a  web application that checks the main elements of websites that are important for search engine optimization."
+authors = [{name = "Vitaliy Berezhnoy", email = "ipbvv@mail.ru"}]
+maintainers = [{name = "Lyova Parsyan"}]
+repository = "https://github.com/Vitaliy-Berezhnoy/python-project-83.git"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
