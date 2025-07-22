@@ -1,9 +1,10 @@
 import os
 
 import requests
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
-from requests.exceptions import HTTPError
+from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
 from page_analyzer.db import UrlsRepo
 from page_analyzer.url_utilities import is_valid_url, normalize_url
@@ -56,18 +57,21 @@ def url_get(url_id):
 def checks_post(url_id):
     url = repo.get_url(url_id)
     try:
-        resp = requests.get(url['name'], timeout=1)
+        resp = requests.get(url['name'], timeout=5)
         resp.raise_for_status()
-    except HTTPError:
+    except (HTTPError, ReadTimeout, ConnectionError):
         flash('Произошла ошибка при проверке', 'danger')
         return redirect(url_for('url_get', url_id=url_id))
+
+    soup = BeautifulSoup(resp.text)
+    meta_tag = soup.find('meta', attrs={'name': 'description'})
 
     check = {
         'url_id': url_id,
         'status_code': resp.status_code,
-        'h1': None,
-        'title': '',
-        'description': ''
+        'h1': soup.h1.text if soup.h1 else None,
+        'title': soup.title.string if soup.title else None,
+        'description': meta_tag.get('content', None) if meta_tag else None
     }
     repo.add_check(check)
     flash('Страница успешно проверена', 'success')
