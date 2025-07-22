@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
 from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
-from page_analyzer.db import UrlsRepo
+from page_analyzer.data_base import UrlsRepo
 from page_analyzer.url_utilities import is_valid_url, normalize_url
 
 load_dotenv()
