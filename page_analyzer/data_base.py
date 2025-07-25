@@ -44,8 +44,8 @@ class UrlsRepo:
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute('SELECT id FROM urls WHERE name = (%s);', (url,))
             url_id = cur.fetchone()
-#            self.conn.commit()
-        return url_id['id']
+
+        return url_id['id'] if url_id else None
 
     def get_url(self, url_id):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
