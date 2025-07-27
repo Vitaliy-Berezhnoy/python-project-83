@@ -7,7 +7,7 @@ source $HOME/.local/bin/env
 # дальше мы загружаем в поключенную базу наш sql-файл с таблицами
 make install && psql -a -d $DATABASE_URL -f database.sql
 for _ in {1..5}; do
-  if pg_isready -d "$DATABASE_URL" -q; then
+  if pg_isready -d $DATABASE_URL -q; then
     break
   fi
   sleep 2
