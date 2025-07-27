@@ -42,7 +42,7 @@ class UrlsRepo:
 
     def find_same_url(self, url):
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
-            cur.execute('SELECT id FROM urls WHERE name = (%s);', (url,))
+            cur.execute('SELECT * FROM urls WHERE name = (%s);', (url,))
             url_id = cur.fetchone()
 
         return url_id['id'] if url_id else None
