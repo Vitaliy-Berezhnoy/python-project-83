@@ -4,3 +4,6 @@
 # Page Analyzer
 
 https://page-analyzer-python-project-83-e0po.onrender.com/
+
+### Description
+Webpage Analyzer is an online tool for evaluating the SEO compliance of web pages. It helps to improve the ranking in search engines.
