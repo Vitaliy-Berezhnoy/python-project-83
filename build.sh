@@ -6,4 +6,9 @@ source $HOME/.local/bin/env
 # ссылка подгрузится из переменной окружения, которую нам нужно будет указать на сервисе деплоя
 # дальше мы загружаем в поключенную базу наш sql-файл с таблицами
 make install && psql -a -d $DATABASE_URL -f database.sql
-sleep 2  # 2-секундная пауза после готовности БД
+for _ in {1..5}; do
+  if pg_isready -d "$DATABASE_URL" -q; then
+    break
+  fi
+  sleep 2
+done
