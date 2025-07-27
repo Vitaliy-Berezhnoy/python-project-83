@@ -2,18 +2,7 @@
 # скачиваем uv и запускаем команду установки зависимостей
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
-
-# Автоматическое определение параметров
-if [ -z "$DATABASE_URL" ]; then
-  export DATABASE_URL="postgresql://postgres:postgres@db:5432/postgres"
-fi
-
-# Ожидание готовности PostgreSQL
-for _ in {1..5}; do
-  if pg_isready -d "$DATABASE_URL"; then
-    break
-  fi
-  sleep 2
-done
-
+# Postgres позволяет подключиться к удаленной базе указав ссылку на нее после флага -d
+# ссылка подгрузится из переменной окружения, которую нам нужно будет указать на сервисе деплоя
+# дальше мы загружаем в поключенную базу наш sql-файл с таблицами
 make install && psql -a -d $DATABASE_URL -f database.sql
