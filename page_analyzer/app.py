@@ -63,7 +63,7 @@ def checks_post(url_id):
         flash('Произошла ошибка при проверке', 'danger')
         return redirect(url_for('url_get', url_id=url_id))
 
-    soup = BeautifulSoup(resp.text)
+    soup = BeautifulSoup(resp.text, "html.parser")
     meta_tag = soup.find('meta', attrs={'name': 'description'})
 
     check = {

@@ -8,7 +8,8 @@ class UrlsRepo:
 #        self.conn = psycopg2.connect(url_db)
 
     def get_all_urls(self):
-        with psycopg2.connect(self.url_db).cursor(cursor_factory=DictCursor) as cur:
+        with psycopg2.connect(
+                self.url_db).cursor(cursor_factory=DictCursor) as cur:
             query = """
             SELECT
                 urls.id,
@@ -43,13 +44,15 @@ class UrlsRepo:
         return url_id['id']
 
     def find_same_url(self, url):
-        with psycopg2.connect(self.url_db).cursor(cursor_factory=DictCursor) as cur:
+        with psycopg2.connect(
+                self.url_db).cursor(cursor_factory=DictCursor) as cur:
             cur.execute('SELECT id FROM urls WHERE name = (%s);', (url,))
             url_id = cur.fetchone()
         return url_id['id'] if url_id else None
 
     def get_url(self, url_id):
-        with psycopg2.connect(self.url_db).cursor(cursor_factory=DictCursor) as cur:
+        with psycopg2.connect(
+                self.url_db).cursor(cursor_factory=DictCursor) as cur:
             cur.execute('SELECT * FROM urls WHERE id = %s;', (url_id,))
             result = cur.fetchone()
         return result
@@ -81,7 +84,8 @@ class UrlsRepo:
         return check_id['id']
 
     def get_url_checks(self, url_id):
-        with psycopg2.connect(self.url_db).cursor(cursor_factory=DictCursor) as cur:
+        with psycopg2.connect(
+                self.url_db).cursor(cursor_factory=DictCursor) as cur:
             query = 'SELECT * FROM url_checks WHERE url_id = %s;'
             cur.execute(query, (url_id,))
             url_checks = cur.fetchall()
